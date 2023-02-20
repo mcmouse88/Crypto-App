@@ -9,17 +9,16 @@ import com.mcmouse88.cryptoapp.presentation.adapters.CoinInfoAdapter
 
 class CoinPriceListActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: CoinViewModel
-    private lateinit var binding: ActivityCoinPriceListBinding
+    private var _binding: ActivityCoinPriceListBinding? = null
+    private val binding: ActivityCoinPriceListBinding
+        get() = requireNotNull(_binding) { "ActivityCoinPriceListBinding is null" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCoinPriceListBinding.inflate(layoutInflater)
+        _binding = ActivityCoinPriceListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val adapter = CoinInfoAdapter(this)
-        binding.recyclerViewCoinPriceList.adapter = adapter
-
         adapter.onCoinClick = object : CoinInfoAdapter.OnCoinClickListener {
             override fun onCoinClick(priceInfo: CoinInfo) {
                 val intent =
@@ -29,10 +28,16 @@ class CoinPriceListActivity : AppCompatActivity() {
 
         }
 
-        viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
+        binding.recyclerViewCoinPriceList.adapter = adapter
+        binding.recyclerViewCoinPriceList.itemAnimator = null
 
-        viewModel.coinInfoList.observe(this) {
-            adapter.coinInfoList = it
-        }
+        val viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
+
+        viewModel.coinInfoList.observe(this, adapter::submitList)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

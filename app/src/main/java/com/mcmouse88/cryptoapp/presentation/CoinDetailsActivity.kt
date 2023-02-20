@@ -10,22 +10,22 @@ import com.squareup.picasso.Picasso
 
 class CoinDetailActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityCoinDetailBinding
-    private lateinit var viewModel: CoinViewModel
+    private var _binding: ActivityCoinDetailBinding? = null
+    private val binding: ActivityCoinDetailBinding
+        get() = requireNotNull(_binding) { "ActivityCoinDetailBinding is null" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCoinDetailBinding.inflate(layoutInflater)
+        _binding = ActivityCoinDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        val viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
         if (!intent.hasExtra(EXTRA_FROM_SYMBOL)) {
             finish()
             return
         }
 
         val fromSymbol = intent.getStringExtra(EXTRA_FROM_SYMBOL) ?: EMPTY_SYMBOL
-        viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
         viewModel.getDetailInfo(fromSymbol).observe(this) {
             binding.apply {
                 textViewFullPrice.text = it.price
@@ -38,6 +38,11 @@ class CoinDetailActivity : AppCompatActivity() {
                 Picasso.get().load(it.imageUrl).into(fullImageView)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {
