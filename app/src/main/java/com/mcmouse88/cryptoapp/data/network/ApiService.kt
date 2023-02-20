@@ -1,8 +1,7 @@
-package com.mcmouse88.cryptoapp.api
+package com.mcmouse88.cryptoapp.data.network
 
-import com.mcmouse88.cryptoapp.pojo.CoinPriceInfoData
-import com.mcmouse88.cryptoapp.pojo.ListOfDatum
-import io.reactivex.Single
+import com.mcmouse88.cryptoapp.data.network.model.CoinInfoJsonContainerDto
+import com.mcmouse88.cryptoapp.data.network.model.CoinNamesListDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -22,11 +21,11 @@ interface ApiService {
      */
 
     @GET ("top/totalvolfull")
-    fun getTopCoinsInfo(
+    suspend fun getTopCoinsInfo(
         @Query(QUERY_PARAM_API_KEY) apiKey: String = KEY_FOR_ACCESS,
         @Query(QUERY_PARAM_LIMIT) limit: Int = 10, // Если указать другое то выведет такое количество валют
         @Query(QUERY_PARAM_TO_SYMBOL) tSym: String = CURRENCY,
-    ): Single<ListOfDatum>
+    ): CoinNamesListDto
 
 
     /**
@@ -40,11 +39,11 @@ interface ApiService {
      * <h> В качестве endpoint запросу [GET] передадим [pricemultifull]</h>
      */
     @GET("pricemultifull")
-    fun getFullPriceList(
+    suspend fun getFullPriceList(
         @Query(QUERY_PARAM_API_KEY) apiKey: String = KEY_FOR_ACCESS,
         @Query(QUERY_PARAM_FROM_SYMBOLS) fSyms: String,
         @Query(QUERY_PARAM_TO_SYMBOLS) tSyms: String = CURRENCY,
-    ): Single<CoinPriceInfoData>
+    ): CoinInfoJsonContainerDto
 
     /**
      * В [companion object] создадим константы, которые будем передавать в качестве

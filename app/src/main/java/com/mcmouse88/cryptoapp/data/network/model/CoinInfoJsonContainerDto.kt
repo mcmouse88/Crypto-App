@@ -1,13 +1,11 @@
-package com.mcmouse88.cryptoapp.pojo
+package com.mcmouse88.cryptoapp.data.network.model
 
 import com.google.gson.JsonObject
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class CoinPriceInfoData(
+data class CoinInfoJsonContainerDto(
     @SerializedName("RAW")
     @Expose
-    val jsonObject: JsonObject? = null
-
-) {
-}
+    val json: JsonObject? = null
+)

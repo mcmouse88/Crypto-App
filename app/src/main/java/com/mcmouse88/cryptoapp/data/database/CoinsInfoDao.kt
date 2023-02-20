@@ -1,31 +1,31 @@
-package com.mcmouse88.cryptoapp.database
+package com.mcmouse88.cryptoapp.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.mcmouse88.cryptoapp.pojo.PriceInfo
+import com.mcmouse88.cryptoapp.data.network.model.CoinInfoDto
 
 /**
  * Интерфейс для работы с базой данных
  * [Query] (см. бибилиотека [androidx.room.Query], для работы с сетью юиюилиотека
  * [retrofit2.http.Query]) в данном случае запрос в базу данных, в скобках
- * указывавется команда запроса ([lastUpdate] одно из полей в классе [PriceInfo].
+ * указывавется команда запроса ([lastUpdate] одно из полей в классе [CoinInfoDto].
  * Аннотация [Insert] значит добавить в базу данных новые значения,
  * параметр [OnConflictStrategy.REPLACE] означает, что новые данные будут записаны поверх
  * старых.
  */
 
 @Dao
-interface CoinPriceInfoDao {
+interface CoinsInfoDao {
 
-    @Query("select * from full_price_list order by lastUpdate desc")
-    fun getPriceList(): LiveData<List<PriceInfo>>
+    @Query("SELECT * FROM full_price_list ORDER BY lastUpdate DESC")
+    fun getPriceList(): LiveData<List<CoinInfoDbModel>>
 
-    @Query("select * from full_price_list where fromSymbol == :fSym limit 1")
-    fun getPriceInfoAboutCoin(fSym: String): LiveData<PriceInfo>
+    @Query("SELECT * FROM full_price_list WHERE fromSymbol == :fSym LIMIT 1")
+    fun getPriceInfoAboutCoin(fSym: String): LiveData<CoinInfoDbModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPriceList(priceList: List<PriceInfo>)
+    suspend fun insertPriceList(priceList: List<CoinInfoDbModel>)
 }
