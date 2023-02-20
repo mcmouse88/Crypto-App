@@ -51,7 +51,7 @@ class CoinInfoAdapter(
     }
 
     interface OnCoinClickListener {
-        fun onCoinClick(priceInfo: CoinInfo)
+        fun onCoinClick(coin: CoinInfo)
     }
 
     class CoinInfoDiffCallback : DiffUtil.ItemCallback<CoinInfo>() {
